@@ -8,5 +8,9 @@ wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR101/000/ERR10114100/ERR10114100_1.fas
 wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR101/000/ERR10114100/ERR10114100_2.fastq.gz
 # ... ...
 
-#################################### compare FastQC v0.11.8 ######################################################
-conda activate metaWRAP
+#################################### FastQC v0.11.8 #################################################
+fastqc ERR10114000_1.fastq.gz -o ./ERR10114000_1_fastqc -t 16
+fastqc ERR10114000_2.fastq.gz -o ./ERR10114000_2_fastqc -t 16
+# ... ...
+
+
