@@ -1,6 +1,6 @@
-# Download Data on HKU HPC2021
-
+# Workflow v1.0.0
 ```
+# Download Data on HKU HPC2021
 # Script: ena-file-download-read_run-PRJEB55534-fastq_ftp-20250501-1123.sh
 wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR101/000/ERR10114000/ERR10114000_1.fastq.gz
 wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR101/000/ERR10114000/ERR10114000_2.fastq.gz
@@ -31,7 +31,7 @@ spades.py --meta --only-assembler -k 21,41,61,81,101 \
 -o $out_dir -t 16
 ```
 
-# Binning with metaWRAP
+# Binning with MetaWRAP (v1.3.2)
 ```
 metawrap binning -t 36 --metabat2 --maxbin2 --concoct \
 -a ./3_Assembly/SPAdes/ERR10114000/scaffolds.fasta \
@@ -68,7 +68,7 @@ coverm genome --bam-files ./4_Binning/ERR10114000_metaWRAP_wd/work_files/ERR1011
 -o metawrap_50_5_bins_coverm.tsv -t 36
 ```
 
-# Quality Assessment with checkm2
+# Quality Assessment with CheckM2
 ```
 checkm2 predict --force --threads 36 --input refined_bin_renamed \
 -x fna --output-directory refined_bin_renamed_checkm2
