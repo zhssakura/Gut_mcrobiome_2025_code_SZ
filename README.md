@@ -103,7 +103,7 @@ cat *-Pathways_MAG_added.tsv > 00_merged-Pathways_MAG_added.tsv
 python3 ./PycharmProjects/Gut_microbiomes/gapseq/Reformat_matrix_using_dod_dict_of_dict_and_dict_of_list_argv.py -in ./8_gapseq/find/00_merged-Pathways_MAG_added.tsv
 ```
 
-# On HPC2021 (20250610):
+# On HPC2021:
 # Add additional column to files
 ```
 python3 /lustre1/g/pharm_jia/Shan_Zhang/softwares/PycharmProjects/Gut_microbiomes/gapseq/Add_one_column_with_file_name_argv.py -dir ./8_gapseq/ -format Pathways.tbl
