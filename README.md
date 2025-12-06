@@ -169,7 +169,7 @@ BioSAK COG2020 -m P -t 36 -db_dir ~/my_DB/COG2020 -i Spades_assembly.faa
 
 # Metatranscriptomics Analysis
 ## 1. Remove Low Quality Reads and Adaptors by Running KneadData (v0.12.3) (CPU/RAM consuming, 150-200GB RAM recommend) to Get High-Quality Non-human Metatranscriptomic Reads.
-## 2. Complete FastQC by running internally using the KneadData
+### 2. Complete FastQC by running internally using the KneadData
 ```
 # The human transcriptome (hg38) reference database is also available (https://hgdownload.cse.ucsc.edu/downloads.html#human) for download (approx. size = 254 MB).
 conda activate kneaddata
