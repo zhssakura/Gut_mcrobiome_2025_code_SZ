@@ -1,4 +1,4 @@
-# Shan's MetaG + MetaT Analysis Workflow v1.0.0
+# MetaG + MetaT Analysis Workflow v1.0.0
 # Download Raw Data with BioSAK (v1.123.7) on HKU HPC2021
 ```
 # Downloead fastq.gz files from ENA database.
@@ -263,7 +263,7 @@ grep dehydrogenase ./PRJNA1246224_MetaG/11_Prokka_29/SRS24590167_Bac/Spades_asse
 ```
 
 
-# Get Transcripts of Specific genes based on COG2020 Annotation Results.
+# Get Transcripts of Specific Genes based on COG2020 Annotation Results.
 ## Genes I am looking for are: tdcE, grcA and AdhE
 ```
 grep -e 'Query' -e 'COG1882' -e 'COG3445' -e 'COG1012' -e 'COG1454' ./11_Prokka_29/SRS24590646_Bac/Spades_assembly_COG2020_wd/Spades_assembly_query_to_cog.txt > ./12_Annotation/SRS24590646_Spades_assembly_query_to_cog_grep_COG1882_COG3445_COG1012_COG1454.txt
