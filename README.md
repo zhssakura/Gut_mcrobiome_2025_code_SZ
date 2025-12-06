@@ -1,7 +1,8 @@
 # Workflow v1.0.0
 # Download Data on HKU HPC2021
 ```
-<!-- D -->
+# Downloead fastq.gz files from ENA database.
+# MetaG data
 # Script: ena-file-download-read_run-PRJEB55534-fastq_ftp-20250501-1123.sh
 wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR101/000/ERR10114000/ERR10114000_1.fastq.gz
 wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR101/000/ERR10114000/ERR10114000_2.fastq.gz
@@ -14,10 +15,12 @@ conda activate BioSAK
 # MetaT data
 cd ./PRJNA1246224_MetaT/1_Raw_data
 BioSAK sra -i ./PRJNA1246224_MetaT/0_Metadata/BioSAK/sra_id_AKK_Project_98_3.txt -o AKK_Projuect_98_20251109_metaT_3 -t 16 -maxsize 100G
+# ... add more as needed
 
 # MetaG data
 cd ./PRJNA1246224_MetaG/1_Raw_data
 BioSAK sra -i ./PRJNA1246224_MetaG/0_Metadata/sra_id_AKK_Project_98_metaG.txt -o AKK_Projuect_98_20251115_metaG -t 16 -maxsize 100G
+# ... add more as needed
 ```
 
 # Convert SRA files to FASTQ Format.
