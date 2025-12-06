@@ -89,7 +89,7 @@ coverm genome --bam-files ./4_Binning/ERR10114000_metaWRAP_wd/work_files/ERR1011
 -o metawrap_50_5_bins_coverm.tsv -t 36
 ```
 
-# Quality Assessment with CheckM2 (v?)
+# Quality Assessment with CheckM2 (v1.1.0)
 ```
 conda activate checkm2
 checkm2 predict --force --threads 36 --input refined_bin_renamed \
@@ -117,7 +117,7 @@ done
 ```
 
 # Merging Pathway Tables for Data Analysis
-# On MacOS:
+## On MacOS:
 ```
 python3 ./PycharmProjects/Gut_microbiomes/gapseq/Add_one_column_with_file_name_argv.py -dir ./8_gapseq/ -format Pathways.tbl
 cd ./8_gapseq
@@ -125,8 +125,8 @@ cat *-Pathways_MAG_added.tsv > 00_merged-Pathways_MAG_added.tsv
 python3 ./PycharmProjects/Gut_microbiomes/gapseq/Reformat_matrix_using_dod_dict_of_dict_and_dict_of_list_argv.py -in ./8_gapseq/find/00_merged-Pathways_MAG_added.tsv
 ```
 
-# On HPC2021:
-# Add additional column to files
+## On HPC2021:
+### Add additional column to files
 ```
 python3 /lustre1/g/pharm_jia/Shan_Zhang/softwares/PycharmProjects/Gut_microbiomes/gapseq/Add_one_column_with_file_name_argv.py -dir ./8_gapseq/ -format Pathways.tbl
 python3 /lustre1/g/pharm_jia/Shan_Zhang/softwares/PycharmProjects/Gut_microbiomes/gapseq/Add_one_column_with_file_name_argv.py -dir ./8_gapseq_Arc/ -format Pathways.tbl
@@ -137,15 +137,13 @@ cat *-Pathways_MAG_added.tsv > 00_merged-Pathways_MAG_added.tsv
 scp -r shanbio@hpc2021-io1:./8_gapseq/00_merged-Pathways_MAG_added.tsv ./8_gapseq/find/0609/
 ```
 
-# Additional Data Processing & Visualization
+### Additional Data Processing & Visualization
 ```
 Follow the sequential commands provided in your script for further analyses, merging, filtering, and plotting.*
 Plotting (MacOS & HPC2021)
 # On MacOS:
 # NMDS plot
 ./Scripts/Rscript_NMDS_gut_microbiome.R
-
-#
 ```
 
 
@@ -168,8 +166,9 @@ BioSAK COG2020 -m P -t 36 -db_dir ~/my_DB/COG2020 -i Spades_assembly.faa
 
 
 # Metatranscriptomics Analysis
-## 1. Remove Low Quality Reads and Adaptors by Running KneadData (v0.12.3) (CPU/RAM consuming, 150-200GB RAM recommend) to Get High-Quality Non-human Metatranscriptomic Reads.
-### 2. Complete FastQC by running internally using the KneadData
+## 1. Remove Low Quality Reads and Adaptors by Running KneadData (v0.12.3) to Get High-Quality Non-human Metatranscriptomic Reads.
+## 2. Complete FastQC by running internally using the KneadData
+### (CPU/RAM consuming, 150-200GB RAM recommend)
 ```
 # The human transcriptome (hg38) reference database is also available (https://hgdownload.cse.ucsc.edu/downloads.html#human) for download (approx. size = 254 MB).
 conda activate kneaddata
@@ -265,7 +264,7 @@ grep dehydrogenase ./PRJNA1246224_MetaG/11_Prokka_29/SRS24590167_Bac/Spades_asse
 
 
 # Get Transcripts of Specific genes based on COG2020 Annotation Results.
-# genes I am looking for are: tdcE, grcA and AdhE
+## Genes I am looking for are: tdcE, grcA and AdhE
 ```
 grep -e 'Query' -e 'COG1882' -e 'COG3445' -e 'COG1012' -e 'COG1454' ./11_Prokka_29/SRS24590646_Bac/Spades_assembly_COG2020_wd/Spades_assembly_query_to_cog.txt > ./12_Annotation/SRS24590646_Spades_assembly_query_to_cog_grep_COG1882_COG3445_COG1012_COG1454.txt
 ```
