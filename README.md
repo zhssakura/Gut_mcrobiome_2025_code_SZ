@@ -1,5 +1,5 @@
-# Workflow v1.0.0
-# Download Data on HKU HPC2021
+# Shan's MetaG + MetaT Analysis Workflow v1.0.0
+# Download Raw Data with BioSAK (v1.123.7) on HKU HPC2021
 ```
 # Downloead fastq.gz files from ENA database.
 # MetaG data
@@ -10,7 +10,7 @@ wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR101/000/ERR10114100/ERR10114100_1.fas
 wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR101/000/ERR10114100/ERR10114100_2.fastq.gz
 # ... add more as needed
 
-# Sownload SRA file
+# Sownload SRA file using BioSAK (v1.123.7).
 conda activate BioSAK
 # MetaT data
 cd ./PRJNA1246224_MetaT/1_Raw_data
@@ -82,20 +82,21 @@ gtdbtk classify_wf --cpus 36 --pplacer_cpus 1 \
 --prefix refined_bin_renamed_GTDB_r226
 ```
 
-# Coverage Estimation with CoverM v0.7.0
+# Coverage Estimation with CoverM (v0.7.0)
 ```
 coverm genome --bam-files ./4_Binning/ERR10114000_metaWRAP_wd/work_files/ERR10114000.bam \
 --genome-fasta-directory ./4_Binning/ERR10114000_metaWRAP_wd/refine_wd/metawrap_50_5_bins/ \
 -o metawrap_50_5_bins_coverm.tsv -t 36
 ```
 
-# Quality Assessment with CheckM2
+# Quality Assessment with CheckM2 (v?)
 ```
+conda activate checkm2
 checkm2 predict --force --threads 36 --input refined_bin_renamed \
 -x fna --output-directory refined_bin_renamed_checkm2
 ```
 
-# De-replication with dRep v3.6.2
+# De-replication with dRep (v3.6.2)
 ```
 dRep dereplicate refined_bin_renamed_dRep_ANI97 \
 -pa 0.9 -sa 0.97 -comp 50 -p 36 \
@@ -105,7 +106,7 @@ dRep dereplicate refined_bin_renamed_dRep_ANI97 \
 --greedy_secondary_clustering --run_tertiary_clustering
 ```
 
-# Pathway & Metabolic Analysis with gapseq v1.4.0
+# Pathway & Metabolic Analysis with gapseq (v1.4.0)
 ```
 declare -a keywords=("PWY0-1314" "GLYCOLYSIS" "PWY-5484" "fructokinase" "2.7.1.7" "PYRUVDEHYD-PWY" "PWY-8275" "PWY-5938" "PWY-5939" "PWY-8274" "PWY-6389" "P41-PWY" "PWY-5482" "PWY-5485" "PWY-5537" "PWY-5768" "PWY3O-440" "PWY-6588" "CENTFERM-PWY" "PWY-6583" "PWY-6883" "PWY-5480" "PWY-5486" "PWY-6587" "PWY-6863" "PWY-7111" "P108-PWY" "PWY-7545" "PWY-7544" "PWY-8450" "PWY-7351" "P125-PWY" "PWY-6396" "PWY-5464" "PWY4LZ-257" "GLYCOLYSIS-TCA-GLYOX-BYPASS" "PWY-5742" "PWY-6970" "PWY-5481" "PWY-5096" "PWY-5100" "P142-PWY" "PWY-5483" "PWY-5538" "PWY-5600")
 
@@ -148,7 +149,7 @@ Plotting (MacOS & HPC2021)
 ```
 
 
-# Gene Prediction of Assembled Metagenomic Scaffold Reads with Prokka v1.14.6
+# Gene Prediction of Assembled Metagenomic Scaffold Reads with Prokka (v1.14.6)
 ```
 conda activate blast
 module load prokka/1.14.6 
@@ -157,7 +158,7 @@ prokka --force --metagenome --cpus 36 --kingdom Bacteria --prefix Spades_assembl
 ```
 
 
-# Conduct KEGG or COG Annotation on Assembled Metagenomic Scaffold Reads.
+# Conduct KEGG or COG Annotation on Assembled Metagenomic Scaffold Reads using BioSAK (v1.123.7).
 ```
 conda activate BioSAK
 cd ./11_Prokka_29/SRS24590646_Bac
@@ -167,7 +168,7 @@ BioSAK COG2020 -m P -t 36 -db_dir ~/my_DB/COG2020 -i Spades_assembly.faa
 
 
 # Metatranscriptomics Analysis
-# 1. Remove Low Quality Reads and Adaptors by Running KneadData v0.12.3 (CPU consuming, 150-200 GB recommend) to Get High-Quality Non-human Metatranscriptomic Reads.
+# 1. Remove Low Quality Reads and Adaptors by Running KneadData (v0.12.3) (CPU consuming, 150-200 GB recommend) to Get High-Quality Non-human Metatranscriptomic Reads.
 # 2. Complete FastQC by running internally using the KneadData
 ```
 # The human transcriptome (hg38) reference database is also available (https://hgdownload.cse.ucsc.edu/downloads.html#human) for download (approx. size = 254 MB).
@@ -223,7 +224,7 @@ SRS24675614_1_kneaddata_unmatched_2.fastq
 ```
 
 
-# Run SortMeRNA v4.3.7 to get High-Quality Non-human & Non-rRNA Metatranscriptomic Reads.
+# Run SortMeRNA (v4.3.7) to get High-Quality Non-human & Non-rRNA Metatranscriptomic Reads.
 ```
 conda activate sortmerna
 cd ./PRJNA1246224_MetaT/2_kneaddate_Bowtie2_fqc_single_node_PE2_headcrop15_PE2/SRS24675614_trim_rep/
@@ -243,9 +244,9 @@ sortmerna -ref ./my_DB/sortmeRNA_4.3.4/rRNA_databases_v4/smr_v4.3_default_db.fas
 # SRS24675621/SRS24675621_non_aligned.fq
 ```
 
-# Mapping use Salmon v1.10.3
+# Mapping use Salmon (v1.10.3)
 ```
-# Split to R1/R2 (needed for tools like Salmon, or if you prefer separate files) Using seqtk v1.5-r133
+# Split to R1/R2 (needed for tools like Salmon, or if you prefer separate files) Using seqtk (v1.5-r133)
 conda activate seqtk
 cd ./PRJNA1246224_MetaT/4_sortmerna
 seqtk seq -1 ./20251125_old_format_non_alignment/SRS24675614_non_aligned.fq > ./20251125_old_format_non_alignment_seqtk/SRS24675614_non_rRNA_R1.fq 
