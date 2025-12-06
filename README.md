@@ -30,7 +30,6 @@ cd ./PRJNA1246224_MetaT/1_Raw_data
 fasterq-dump ./PRJNA1246224_MetaT/1_Raw_data/AKK_Projuect_98_20251109_metaT_3/SRS24675716/SRR33081990/SRR33081990.sra --split-3 -O AKK_Projuect_98_20251109_metaT_3 -t AKK_Projuect_98_20251109_metaT_3/fasterq_dump_tmp
 ```
 
-
 # Quality Control with FastQC (v0.11.8)
 ```
 fastqc ERR10114000_1.fastq.gz -o ./ERR10114000_1_fastqc -t 16
@@ -116,39 +115,6 @@ do
 done
 ```
 
-
-# Conduct KEGG or COG annotation on assembled metagenomic scaffold reads.
-```
-conda activate BioSAK
-cd ./11_Prokka_29/SRS24590646_Bac
-BioSAK COG2020 -m P -t 36 -db_dir ~/my_DB/COG2020 -i Spades_assembly.faa
-# The output file for next step is ./11_Prokka_29/SRS24590646_Bac/Spades_assembly_COG2020_wd/Spades_assembly_query_to_cog.txt
-```
-
-
-
-
-
-```
-```
-
-
-
-
-
-# Get Transcripts of Specific genes based on COG2020 Annotation Results.
-# genes I am looking for are: tdcE, grcA and AdhE
-```
-grep -e 'Query' -e 'COG1882' -e 'COG3445' -e 'COG1012' -e 'COG1454' ./11_Prokka_29/SRS24590646_Bac/Spades_assembly_COG2020_wd/Spades_assembly_query_to_cog.txt > ./12_Annotation/SRS24590646_Spades_assembly_query_to_cog_grep_COG1882_COG3445_COG1012_COG1454.txt
-```
-
-
-
-
-
-
-
-
 # Merging Pathway Tables for Data Analysis
 # On MacOS:
 ```
@@ -179,5 +145,127 @@ Plotting (MacOS & HPC2021)
 ./Scripts/Rscript_NMDS_gut_microbiome.R
 
 #
+```
+
+
+# Gene Prediction of Assembled Metagenomic Scaffold Reads with Prokka v1.14.6
+```
+conda activate blast
+module load prokka/1.14.6 
+cd ./PRJNA1246224_MetaG/11_Prokka
+prokka --force --metagenome --cpus 36 --kingdom Bacteria --prefix Spades_assembly --locustag SRS24590218 --strain SRS24590218 --outdir SRS24590218_Bac ./PRJNA1246224_MetaG/3_Assembly/SPAdes_assemblies_renamed/scaffold_file_name_renamed_ID_renamed/fasta_renamed_bins/SRS24590218.fasta --compliant
+```
+
+
+# Conduct KEGG or COG Annotation on Assembled Metagenomic Scaffold Reads.
+```
+conda activate BioSAK
+cd ./11_Prokka_29/SRS24590646_Bac
+BioSAK COG2020 -m P -t 36 -db_dir ~/my_DB/COG2020 -i Spades_assembly.faa
+# The output file for next step is ./11_Prokka_29/SRS24590646_Bac/Spades_assembly_COG2020_wd/Spades_assembly_query_to_cog.txt
+```
+
+
+# Metatranscriptomics Analysis
+# 1. Remove Low Quality Reads and Adaptors by Running KneadData v0.12.3 (CPU consuming, 150-200 GB recommend) to Get High-Quality Non-human Metatranscriptomic Reads.
+# 2. Complete FastQC by running internally using the KneadData
+```
+# The human transcriptome (hg38) reference database is also available (https://hgdownload.cse.ucsc.edu/downloads.html#human) for download (approx. size = 254 MB).
+conda activate kneaddata
+kneaddata_database --download human_transcriptome bowtie2 ./my_DB/kneaddata_DB/human_transcriptome_bowtie2/
+# This will generate output files:
+# human_hg38_refMrna.1.bt2
+# human_hg38_refMrna.2.bt2
+# human_hg38_refMrna.3.bt2
+# human_hg38_refMrna.4.bt2
+# human_hg38_refMrna.rev.1.bt2
+# human_hg38_refMrna.rev.2.bt2
+
+
+db_dir="./my_DB/kneaddata_DB/human_transcriptome_bowtie2"
+cd ./PRJNA1246224_MetaT/1_Raw_data/AKK_Projuect_98_20251109_metaT_fastq
+SRS_id="SRS24675982"
+mkdir ./PRJNA1246224_MetaT/2_kneaddate_Bowtie2_fqc_single_node_PE2_headcrop15
+out_dir="./PRJNA1246224_MetaT/2_kneaddate_Bowtie2_fqc_single_node_PE2_headcrop15/"$SRS_id
+mkdir $out_dir
+kneaddata -i1 $SRS_id"_1.fastq" -i2 $SRS_id"_2.fastq" --reference-db $db_dir -o $out_dir --trimmomatic-options "-Xmx64g ILLUMINACLIP:./PRJNA1246224_MetaT/TruSeq3-PE-2.fa:2:30:10 SLIDINGWINDOW:4:20 LEADING:20 TRAILING:20 HEADCROP:15 MINLEN:50" --sequencer-source TruSeq3 --run-fastqc-start --run-fastqc-end -t 16
+# This will generate output files:
+# adapters.fa
+# fastqc
+# SRS24675614_1_kneaddata_human_hg38_refMrna_0_bowtie2_paired_contam_1.fastq
+# SRS24675614_1_kneaddata_human_hg38_refMrna_0_bowtie2_paired_contam_2.fastq
+# SRS24675614_1_kneaddata_human_hg38_refMrna_0_bowtie2_unmatched_1_contam.fastq
+# SRS24675614_1_kneaddata_human_hg38_refMrna_0_bowtie2_unmatched_2_contam.fastq
+# SRS24675614_1_kneaddata_human_hg38_refMrna_1_bowtie2_paired_contam_1.fastq
+# SRS24675614_1_kneaddata_human_hg38_refMrna_1_bowtie2_paired_contam_2.fastq
+# SRS24675614_1_kneaddata_human_hg38_refMrna_1_bowtie2_unmatched_1_contam.fastq
+# SRS24675614_1_kneaddata_human_hg38_refMrna_1_bowtie2_unmatched_2_contam.fastq
+# SRS24675614_1_kneaddata.log
+# SRS24675614_1_kneaddata_paired_1.fastq
+# SRS24675614_1_kneaddata_paired_2.fastq
+# SRS24675614_1_kneaddata.repeats.removed.1.fastq
+# SRS24675614_1_kneaddata.repeats.removed.2.fastq
+# SRS24675614_1_kneaddata.repeats.removed.unmatched.1.fastq
+# SRS24675614_1_kneaddata.repeats.removed.unmatched.2.fastq
+# SRS24675614_1_kneaddata.trimmed.1.fastq
+# SRS24675614_1_kneaddata.trimmed.2.fastq
+# SRS24675614_1_kneaddata.trimmed.single.1.fastq
+# SRS24675614_1_kneaddata.trimmed.single.2.fastq
+# SRS24675614_1_kneaddata_unmatched_1.fastq
+# SRS24675614_1_kneaddata_unmatched_2.fastq
+
+
+# Keep following filtered non-human metatranscriptomi reads:
+SRS24675614_1_kneaddata_paired_1.fastq
+SRS24675614_1_kneaddata_paired_2.fastq
+SRS24675614_1_kneaddata_unmatched_1.fastq
+SRS24675614_1_kneaddata_unmatched_2.fastq
+```
+
+
+# Run SortMeRNA v4.3.7 to get High-Quality Non-human & Non-rRNA Metatranscriptomic Reads.
+```
+conda activate sortmerna
+cd ./PRJNA1246224_MetaT/2_kneaddate_Bowtie2_fqc_single_node_PE2_headcrop15_PE2/SRS24675614_trim_rep/
+
+sortmerna -ref ./my_DB/sortmeRNA_4.3.4/rRNA_databases_v4/smr_v4.3_default_db.fasta \
+-reads SRS24675614_1_kneaddata_paired_1.fastq \
+-reads SRS24675614_1_kneaddata_paired_2.fastq \
+-workdir ./PRJNA1246224_MetaT/4_sortmerna/ \
+--aligned SRS24675614_aligned \
+--other SRS24675614_non_aligned \
+-fastx -blast 1 -num_alignments 1 \
+--sam --threads 16
+# These are High-Quality Non-human & Non-rRNA Metatranscriptomic Reads to be used in mapping step, so keep them.
+# SRS24675614/SRS24675614_non_aligned.fq
+# SRS24675616/SRS24675616_non_aligned.fq
+# SRS24675620/SRS24675620_non_aligned.fq
+# SRS24675621/SRS24675621_non_aligned.fq
+```
+
+# Mapping use Salmon v1.10.3
+```
+# Split to R1/R2 (needed for tools like Salmon, or if you prefer separate files) Using seqtk v1.5-r133
+conda activate seqtk
+cd ./PRJNA1246224_MetaT/4_sortmerna
+seqtk seq -1 ./20251125_old_format_non_alignment/SRS24675614_non_aligned.fq > ./20251125_old_format_non_alignment_seqtk/SRS24675614_non_rRNA_R1.fq 
+seqtk seq -2 ./20251125_old_format_non_alignment/SRS24675614_non_aligned.fq > ./20251125_old_format_non_alignment_seqtk/SRS24675614_non_rRNA_R2.fq
+
+conda activate salmon
+cd ./PRJNA1246224_MetaT/4_sortmerna/20251125_old_format_non_alignment_seqtk/
+salmon index -t ./PRJNA1246224_MetaG/11_Prokka_29/SRS24590646_Bac/Spades_assembly.ffn -i ./PRJNA1246224_MetaG/11_Prokka_29/SRS24590646_Bac/prokka_cds_index -p 12
+salmon quant -i ./PRJNA1246224_MetaG/11_Prokka_29/SRS24590646_Bac/prokka_cds_index -l A -1 SRS24675621_non_rRNA_R1.fq -2 SRS24675621_non_rRNA_R2.fq -p 12 -o ./PRJNA1246224_MetaG/11_Prokka_29/SRS24590646_Bac/sample_salmon
+
+# (Optional) Use below lines to find if prokka results have the annotations:
+grep AdhE ./PRJNA1246224_MetaG/11_Prokka_29/SRS24590167_Bac/Spades_assembly.ffn
+grep dehydrogenase ./PRJNA1246224_MetaG/11_Prokka_29/SRS24590167_Bac/Spades_assembly.ffn
+# This gives rough annotation results. More details for example, KO or COG ID is needed.
+```
+
+
+# Get Transcripts of Specific genes based on COG2020 Annotation Results.
+# genes I am looking for are: tdcE, grcA and AdhE
+```
+grep -e 'Query' -e 'COG1882' -e 'COG3445' -e 'COG1012' -e 'COG1454' ./11_Prokka_29/SRS24590646_Bac/Spades_assembly_COG2020_wd/Spades_assembly_query_to_cog.txt > ./12_Annotation/SRS24590646_Spades_assembly_query_to_cog_grep_COG1882_COG3445_COG1012_COG1454.txt
 ```
 
