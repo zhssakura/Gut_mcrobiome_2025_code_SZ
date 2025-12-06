@@ -1,13 +1,31 @@
 # Workflow v1.0.0
-```
 # Download Data on HKU HPC2021
+```
 # Script: ena-file-download-read_run-PRJEB55534-fastq_ftp-20250501-1123.sh
 wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR101/000/ERR10114000/ERR10114000_1.fastq.gz
 wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR101/000/ERR10114000/ERR10114000_2.fastq.gz
 wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR101/000/ERR10114100/ERR10114100_1.fastq.gz
 wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR101/000/ERR10114100/ERR10114100_2.fastq.gz
 # ... add more as needed
+
+# Sownload SRA file
+conda activate BioSAK
+# MetaT data
+cd ./PRJNA1246224_MetaT/1_Raw_data
+BioSAK sra -i ./PRJNA1246224_MetaT/0_Metadata/BioSAK/sra_id_AKK_Project_98_3.txt -o AKK_Projuect_98_20251109_metaT_3 -t 16 -maxsize 100G
+
+# MetaG data
+cd ./PRJNA1246224_MetaG/1_Raw_data
+BioSAK sra -i ./PRJNA1246224_MetaG/0_Metadata/sra_id_AKK_Project_98_metaG.txt -o AKK_Projuect_98_20251115_metaG -t 16 -maxsize 100G
 ```
+
+# Convert SRA files to FASTQ Format.
+```
+conda activate BioSAK
+cd ./PRJNA1246224_MetaT/1_Raw_data
+fasterq-dump ./PRJNA1246224_MetaT/1_Raw_data/AKK_Projuect_98_20251109_metaT_3/SRS24675716/SRR33081990/SRR33081990.sra --split-3 -O AKK_Projuect_98_20251109_metaT_3 -t AKK_Projuect_98_20251109_metaT_3/fasterq_dump_tmp
+```
+
 
 # Quality Control with FastQC (v0.11.8)
 ```
@@ -93,6 +111,39 @@ do
   gapseq find -p "$i" -t Bacteria -b 100 -c 70 -l MetaCyc -n -y ERR10114000.fna > ERR10114000-"$i"-report.sh
 done
 ```
+
+
+# Conduct KEGG or COG annotation on assembled metagenomic scaffold reads.
+```
+conda activate BioSAK
+cd ./11_Prokka_29/SRS24590646_Bac
+BioSAK COG2020 -m P -t 36 -db_dir ~/my_DB/COG2020 -i Spades_assembly.faa
+# The output file for next step is ./11_Prokka_29/SRS24590646_Bac/Spades_assembly_COG2020_wd/Spades_assembly_query_to_cog.txt
+```
+
+
+
+
+
+```
+```
+
+
+
+
+
+# Get Transcripts of Specific genes based on COG2020 Annotation Results.
+# genes I am looking for are: tdcE, grcA and AdhE
+```
+grep -e 'Query' -e 'COG1882' -e 'COG3445' -e 'COG1012' -e 'COG1454' ./11_Prokka_29/SRS24590646_Bac/Spades_assembly_COG2020_wd/Spades_assembly_query_to_cog.txt > ./12_Annotation/SRS24590646_Spades_assembly_query_to_cog_grep_COG1882_COG3445_COG1012_COG1454.txt
+```
+
+
+
+
+
+
+
 
 # Merging Pathway Tables for Data Analysis
 # On MacOS:
