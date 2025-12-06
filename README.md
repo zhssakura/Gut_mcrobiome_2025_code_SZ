@@ -11,15 +11,15 @@ wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR101/000/ERR10114100/ERR10114100_2.fas
 # ... add more as needed
 
 # Sownload SRA file using BioSAK (v1.123.7).
+# MetaG data
+cd ./PRJNA1246224_MetaG/1_Raw_data
+BioSAK sra -i ./PRJNA1246224_MetaG/0_Metadata/sra_id_AKK_Project_98_metaG.txt -o AKK_Projuect_98_20251115_metaG -t 16 -maxsize 100G
+# ... add more as needed
+
 conda activate BioSAK
 # MetaT data
 cd ./PRJNA1246224_MetaT/1_Raw_data
 BioSAK sra -i ./PRJNA1246224_MetaT/0_Metadata/BioSAK/sra_id_AKK_Project_98_3.txt -o AKK_Projuect_98_20251109_metaT_3 -t 16 -maxsize 100G
-# ... add more as needed
-
-# MetaG data
-cd ./PRJNA1246224_MetaG/1_Raw_data
-BioSAK sra -i ./PRJNA1246224_MetaG/0_Metadata/sra_id_AKK_Project_98_metaG.txt -o AKK_Projuect_98_20251115_metaG -t 16 -maxsize 100G
 # ... add more as needed
 ```
 
@@ -168,8 +168,8 @@ BioSAK COG2020 -m P -t 36 -db_dir ~/my_DB/COG2020 -i Spades_assembly.faa
 
 
 # Metatranscriptomics Analysis
-# 1. Remove Low Quality Reads and Adaptors by Running KneadData (v0.12.3) (CPU consuming, 150-200 GB recommend) to Get High-Quality Non-human Metatranscriptomic Reads.
-# 2. Complete FastQC by running internally using the KneadData
+## 1. Remove Low Quality Reads and Adaptors by Running KneadData (v0.12.3) (CPU/RAM consuming, 150-200GB RAM recommend) to Get High-Quality Non-human Metatranscriptomic Reads.
+## 2. Complete FastQC by running internally using the KneadData
 ```
 # The human transcriptome (hg38) reference database is also available (https://hgdownload.cse.ucsc.edu/downloads.html#human) for download (approx. size = 254 MB).
 conda activate kneaddata
