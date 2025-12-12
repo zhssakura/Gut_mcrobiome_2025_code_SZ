@@ -1,7 +1,7 @@
 ```diff
-*Apparently, my role in this project boils down to having “downloaded” some data and then “annotated” it.*
-*Taxonomically? Functionally? Who knows—like Schrödinger’s annotation, it exists in a superposition until someone decides it counts.*
-*In any case, there were clearly far greater things to be done by far greater people.*
+*🔴 Apparently, my role in this project boils down to having “downloaded” some data and then “annotated” it.*
+*🔴 Taxonomically? Functionally? Who knows—like Schrödinger’s annotation, it exists in a superposition until someone decides it counts.*
+*🔴 In any case, there were clearly far greater things to be done by far greater people.*
 ```
 
 <img width="1320" height="616" alt="image" src="https://github.com/user-attachments/assets/685e5cda-f230-47b7-a8bc-5033843395c7" />
