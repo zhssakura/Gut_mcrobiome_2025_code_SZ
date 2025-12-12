@@ -1,5 +1,5 @@
 ```diff
-*🔴 Apparently, my role in this project boils down to having “downloaded” some data and then “annotated” it.*
+*🔴 Apparently, my role in this project is simply to “download” some data and then “annotate” it.*
 *🔴 Taxonomically? Functionally? Who knows—like Schrödinger’s annotation, it exists in a superposition until someone decides it counts.*
 *🔴 In any case, there were clearly far greater things to be done by far greater people.*
 ```
